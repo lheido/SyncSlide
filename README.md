@@ -1,2 +1,2 @@
 # SyncSlide
-Slide presentation based on node.js
+Synchronized slide presentation based on node.js

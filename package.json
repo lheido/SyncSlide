@@ -1,0 +1,16 @@
+
+{
+    "name": "SyncSlide",
+    "version": "0.0.1",
+    "description": "SyncSlide - Grunt dependencies",
+    "author": "Treille Léonard <leonard.treille@gmail.com>",
+    "dependencies": {
+        "grunt": "*",
+        "grunt-contrib-sass": "*",
+        "grunt-contrib-watch": "*",
+        "grunt-contrib-uglify": "*",
+        "grunt-contrib-copy": "*",
+        "express": "*",
+        "socket.io": "*"
+    }
+}

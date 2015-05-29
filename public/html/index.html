@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SyncSlide</title>
+    <script src="/socket.io.js"></script>
+    <script src="/js/Sync.js"></script>
+    
+</head>
+<body>
+    <script>
+        var test = new SyncClient({
+            events: {
+                onTap: function() {
+                    console.log('foooooooo', arguments);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
