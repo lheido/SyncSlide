@@ -8,7 +8,7 @@ module.exports = function(grunt) {
                     update: true
                 },
                 files: {
-                    "public/css/design.css": "assets/scss/design.scss"
+                    "public/css/syncSlide.css": "assets/scss/syncSlide.scss"
                 }
             }
         },

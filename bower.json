@@ -1,0 +1,21 @@
+{
+  "name": "SyncSlide",
+  "version": "0.0.1",
+  "homepage": "https://github.com/lheido/SyncSlide",
+  "authors": [
+    "lheido <leonard.treille@gmail.com>"
+  ],
+  "description": "Synchronized slide presentation based on node.js",
+  "main": "syncSlide.js",
+  "license": "GPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "hammerjs": "~2.0.4"
+  }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SyncSlide - Viewer</title>
+    <link rel="stylesheet" href="/css/syncSlide.css">
+    <script src="/socket.io.js"></script>
+    <script src="/js/Sync.js"></script>
+</head>
+<body>
+    <div class="content">
+        <div class="slide">
+            <div class="slide-content">
+                <div class="slide-header">
+                   <h1>Header - slide 1</h1>
+                </div>
+                <div class="slide-block">
+                   <p>Content block 1 - slide 1</p>
+                </div>
+                <div class="slide-block">
+                   <p>Content block 2 - slide 1</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="slide-content">
+                <div class="slide-header">
+                    <h1>Header - slide 2</h1>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 1 - slide 2</p>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 2 - slide 2</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="slide-content">
+                <div class="slide-header">
+                    <h1>Header - slide 3</h1>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 1 - slide 3</p>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 2 - slide 3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var viewer = new SyncViewer();
+    </script>
+</body>
+</html>

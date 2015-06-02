@@ -3,19 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>SyncSlide</title>
-    <script src="/socket.io.js"></script>
-    <script src="/js/Sync.js"></script>
-    
+    <link rel="stylesheet" href="/css/syncSlide.css">
 </head>
 <body>
-    <script>
-        var test = new SyncClient({
-            events: {
-                onTap: function() {
-                    console.log('foooooooo', arguments);
-                }
-            }
-        });
-    </script>
+    <div class="content">
+        <a href="/viewer">Viewer</a>
+        <a href="/controller">Controller</a>
+    </div>
 </body>
 </html>
