@@ -20,7 +20,6 @@ body {
     height: 100vh;
     background-color: $white;
     position: relative;
-//    padding-top: 1.5em;
     box-sizing: border-box;
     overflow-x: hidden;
     
@@ -55,4 +54,8 @@ body {
         position: relative;
         box-sizing: border-box;
     }
+}
+
+.tap {
+    transition: all 0.3s linear;
 }

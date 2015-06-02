@@ -1,57 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>SyncSlide - Controller</title>
-        <link rel="stylesheet" href="/css/syncSlide.css">
-        <script src="/hammerjs/hammer.js"></script>
-        <script src="/socket.io.js"></script>
-        <script src="/js/Sync.js"></script>
-    </head>
-    <body>
-        <div class="content">
-            <div class="slide">
-                <div class="slide-content">
-                    <div class="slide-header">
-                        <h1>Header - slide 1</h1>
-                    </div>
-                    <div class="slide-block">
-                        <p>Content block 1 - slide 1</p>
-                    </div>
-                    <div class="slide-block">
-                        <p>Content block 2 - slide 1</p>
-                    </div>
+<head>
+    <meta charset="UTF-8">
+    <title>SyncSlide - Controller</title>
+    <link rel="stylesheet" href="/css/syncSlide.css">
+    <script src="/hammerjs/hammer.js"></script>
+    <script src="/socket.io.js"></script>
+    <script src="/js/Sync.js"></script>
+</head>
+<body>
+    <div class="content">
+        <div class="slide">
+            <div class="slide-content">
+                <div class="slide-header">
+                    <h1 class="tap">Header - slide 1</h1>
                 </div>
-            </div>
-            <div class="slide">
-                <div class="slide-content">
-                    <div class="slide-header">
-                        <h1>Header - slide 2</h1>
-                    </div>
-                    <div class="slide-block">
-                        <p>Content block 1 - slide 2</p>
-                    </div>
-                    <div class="slide-block">
-                        <p>Content block 2 - slide 2</p>
-                    </div>
+                <div class="slide-block">
+                    <p class="tap">Content block 1 - slide 1</p>
                 </div>
+                <div class="slide-block">
+                    <p class="tap">Content block 2 - slide 1</p>
+                </div>
+                <canvas id="test-canvas" width="200px" height="200px" style="border: 1px solid black;"></canvas>
             </div>
-            <div class="slide">
-                <div class="slide-content">
-                    <div class="slide-header">
-                        <h1>Header - slide 3</h1>
-                    </div>
-                    <div class="slide-block">
-                        <p>Content block 1 - slide 3</p>
-                    </div>
-                    <div class="slide-block">
-                        <p>Content block 2 - slide 3</p>
-                    </div>
+        </div>
+        <div class="slide">
+            <div class="slide-content">
+                <div class="slide-header">
+                    <h1>Header - slide 2</h1>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 1 - slide 2</p>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 2 - slide 2</p>
                 </div>
             </div>
         </div>
-        <script>
-           var controller = new SyncController();
-        </script>
-    </body>
+        <div class="slide">
+            <div class="slide-content">
+                <div class="slide-header">
+                    <h1>Header - slide 3</h1>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 1 - slide 3</p>
+                </div>
+                <div class="slide-block">
+                    <p>Content block 2 - slide 3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+       var controller = new SyncController();
+    </script>
+</body>
 </html>

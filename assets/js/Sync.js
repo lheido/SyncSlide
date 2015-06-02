@@ -52,9 +52,9 @@ SyncServer.prototype.constructor = SyncServer;
  */
 SyncServer.prototype.eventClosure = function(event) {
     var self = this;
-    this.socket.on(event, function(args){
+    this.socket.on(event, function(){
 //        self.broadcast(event, args);
-        self.io.emit(event, args);
+        self.io.emit(event, arguments);
     });
 }
 
@@ -92,7 +92,14 @@ function SyncViewer() {
     var self = this;
     SyncClient.call(this, {
         events: {
-            onTap: function(evt) {},
+            onTap: function(args) {
+                var elt = document.querySelectorAll('.tap')[args[1]];
+                if (elt.style.boxShadow == "0px 0px 42px grey") {
+                    elt.style.boxShadow = '0px 0px 42px transparent';
+                } else {
+                    elt.style.boxShadow = '0px 0px 42px grey';
+                }
+            },
             onSwipeLeft: function(evt) {
                 self.currentSlide += 1;
                 self.slides[self.currentSlide].style.transform = 'translate3d(0%,0,0)';
@@ -100,55 +107,16 @@ function SyncViewer() {
             onSwipeRight: function(evt) {
                 self.slides[self.currentSlide].style.transform = 'translate3d(100%,0,0)';
                 self.currentSlide -= 1;
+            },
+            onPan: function(evt) {
+                self.ctx.fillRect(evt.center.x, evt.center.y-150, 2, 2);
             }
-//            onPanStart: function(evt) {
-//                if (self.currentSlide < self.slides.length) {
-//                    self.slides[self.currentSlide].style.transitionDuration = '0s';
-//                }
-//            },
-//            onPanLeft: function(evt) {
-//                var nextSlide = self.currentSlide + 1;
-//                if (nextSlide <= self.slides.length) {
-//                    self.slides[nextSlide].style.transform = 'translate3d('+(evt.pos*100)+'%,0,0)';
-//                }
-//            },
-//            onPanRight: function(evt) {
-//                if (self.currentSlide > 0) {
-//                    self.slides[self.currentSlide].style.transform = 'translate3d('+(evt.pos*100)+'%,0,0)';
-//                }
-//            },
-//            onPanEnd: function(evt) {
-//                if (self.currentSlide < self.slides.length) {
-//                    if (evt.deltaX < 0) {
-//                        //panleft
-//                        if (self.currentSlideBeforeLast()) {
-//                            self.currentSlide += 1;
-//                            self.slides[self.currentSlide].style.transitionDuration = '300ms';
-//                            if (evt.pos <= 0.5) {
-//                                self.slides[self.currentSlide].style.transform = 'translate3d(0%,0,0)';
-//                            } else {
-//                                self.slides[self.currentSlide].style.transform = 'translate3d(100%,0,0)';
-//                                self.currentSlide -= 1;
-//                            }
-//                        }
-//                    } else {
-//                        //panright
-//                        if (self.currentSlideAfterFirst()) {
-//                            self.slides[self.currentSlide].style.transitionDuration = '300ms';
-//                            if (evt.pos >= 0.5) {
-//                                self.slides[self.currentSlide].style.transform = 'translate3d(100%,0,0)';
-//                                self.currentSlide -= 1;
-//                            } else {
-//                                self.slides[self.currentSlide].style.transform = 'translate3d(0%,0,0)';
-//                            }
-//                            
-//                        }
-//                    }
-//                    console.log(self.currentSlide);
-//                }
-//            }
         }
     });
+    //test canvas
+    this.testCanvas = document.querySelector('#test-canvas');
+    this.ctx = this.testCanvas.getContext('2d');
+    //--
     this.content = document.querySelector('.content');
     this.slides = document.querySelectorAll('.slide');
     this.currentSlide = 0;
@@ -190,30 +158,18 @@ function SyncController() {
             self.emit('onSwipeRight', evt);    
         }
     });
-//    this.hammerContent.on('panstart', function(evt){
-//        self.emit('onPanStart', evt);
-//    });
-//    this.hammerContent.on('panleft', function(evt){
-//        evt.pos = evt.center.x / window.innerWidth;
-////        evt.pos = (window.innerWidth - (window.innerWidth - evt.center.x)) / 100;
-//        if (self.currentSlideBeforeLast()) {
-//            self.emit('onPanLeft', evt);
-//        }
-//    });
-//    this.hammerContent.on('panright', function(evt){
-//        evt.pos = evt.center.x / window.innerWidth;
-////        evt.pos = (window.innerWidth - (window.innerWidth - evt.center.x)) / 100;
-//        if (self.currentSlideAfterFirst()) {
-//            self.emit('onPanRight', evt);
-//        }
-//    });
-//    this.hammerContent.on('panend', function(evt){
-//        evt.pos = evt.center.x / window.innerWidth;
-////        evt.pos = (window.innerWidth - (window.innerWidth - evt.center.x)) / 100;
-//        if (self.currentSlide < self.slides.length) {
-//            self.emit('onPanEnd', evt);
-//        }
-//    });
+    var canvasEvent = new Hammer(this.testCanvas);
+    canvasEvent.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+    canvasEvent.on('pan', function(evt){
+        self.emit('onPan', evt) ;
+    });
+    var tapElts = document.querySelectorAll('.tap');
+    Hammer.each(tapElts, function(item, index, src){
+        var ham = new Hammer(item);
+        ham.on('tap', function(evt){
+            self.emit('onTap', evt, index);
+        });
+    });
     
 }
 SyncController.prototype = Object.create(SyncViewer.prototype);
