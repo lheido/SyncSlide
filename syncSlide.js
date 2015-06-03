@@ -4,7 +4,6 @@ var server     = require('http').Server(app);
 var io         = require('socket.io').listen(server);
 var sync       = require('./public/js/Sync.js');
 var SyncServer = sync.SyncServer;
-var PORT       = 3000;
 
 io.on('connection', function (socket) {
     var syncServer = new SyncServer(socket, io);
@@ -31,5 +30,5 @@ app.get('/controller', function(req, res){
 });
 
 
-server.listen(PORT);
-console.log('Server listening on port ' + PORT);
+server.listen(sync.PORT);
+console.log('Server listening on port ' + sync.PORT);

@@ -1,3 +1,6 @@
+var PORT = 3000;
+var HOSTNAME = 'localhost';
+
 /*
  * Mother Class !
  */
@@ -8,7 +11,7 @@ function Sync(socket) {
         if (io == undefined) {
             throw 'Pass socket to the constructor, or make sure socket.io.js is loaded';
         }
-        this.socket = io('http://localhost:3000');
+        this.socket = io('http://'+HOSTNAME+':'+PORT);
     }
 }
 
@@ -180,6 +183,8 @@ SyncController.prototype.constructor = SyncController;
  */
 try {
     module.exports = {
+        PORT: PORT,
+        HOSTNAME: HOSTNAME,
         SyncServer : SyncServer,
         SyncClient : SyncClient
     }

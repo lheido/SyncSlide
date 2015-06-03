@@ -53,6 +53,130 @@ body {
     .slide-content {
         position: relative;
         box-sizing: border-box;
+        height: 100%;
+        
+
+        .slide-header {
+            box-sizing: border-box;
+            
+            h1 {
+                padding: 1.5em;
+                padding-top: 2.5em;
+                padding-left: 2.5em;
+                margin: 0;
+                background-color: $warm-grey;
+                color: $cool-grey;
+                border-bottom: 4px solid $light-aubergine;
+                font-size: 38px;
+            }
+        }
+        
+        .slide-quote {
+            width: 320px;
+            margin: auto;
+            text-align: center;
+            padding: 100px;
+            position: relative;
+            font-size: 24px;
+            
+            &::before, &::after {
+                content: '';
+                position: absolute;
+                width: 10px;
+                height: 42px;
+                border-left: 6px solid $ubuntu-orange;
+                border-right: 6px solid $ubuntu-orange;
+            }
+            
+            &::before {
+                top: 42px;
+                left: 42px;
+            }
+            
+            &::after {
+                bottom: 42px;
+                right: 42px;
+            }
+            
+            &.big {
+                font-size: 48px;
+                width: 640px;
+            }
+        }
+        
+        .slide-by {
+            position: absolute;
+            padding: 2.5em;
+            margin: 0;
+            font-size: 20px;
+            color: $warm-grey;
+            
+            &::before {
+                content: '';
+                position: absolute;
+                width: 90%;
+                height: 2px;
+                right: 0;
+                bottom: 2em;
+                background-color: $light-aubergine;
+            }
+        }
+        
+        .bottom {
+            bottom: 0px;
+        }
+        
+        .right {
+            right: 0px;
+        }
+        
+        ul {
+            
+            li {
+                list-style: none;
+                font-size: 24px;
+            }
+        }
+        
+        .slide-block {
+            & > ul {
+                width: 60%;
+                margin: auto;
+                margin-top: 10%;
+                
+                & > li {
+                    margin-top: 42px;
+                    display: inline-block;
+                    margin-left: 10%;
+                    
+                    & > ul {
+                        margin-top: 10px;
+                        
+                        & > li {
+                            position: relative;
+                            margin-left: 42px;
+                            
+                            &::before {
+                                content: '';
+                                position: absolute;
+                                top: 9px;
+                                left: -20px;
+                                width: 10px;
+                                height: 10px;
+                                background-color: $ubuntu-orange;
+                                border-radius: 50%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        .li-title {
+            font-size: 32px;
+            border-left: 6px solid $light-aubergine;
+            padding-left: 10px;
+        }
     }
 }
 
