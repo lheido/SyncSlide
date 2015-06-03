@@ -100,16 +100,16 @@ function SyncViewer() {
                     elt.style.boxShadow = '0px 0px 42px grey';
                 }
             },
-            onSwipeLeft: function(evt) {
+            onSwipeLeft: function(args) {
                 self.currentSlide += 1;
                 self.slides[self.currentSlide].style.transform = 'translate3d(0%,0,0)';
             },
-            onSwipeRight: function(evt) {
+            onSwipeRight: function(args) {
                 self.slides[self.currentSlide].style.transform = 'translate3d(100%,0,0)';
                 self.currentSlide -= 1;
             },
-            onPan: function(evt) {
-                self.ctx.fillRect(evt.center.x, evt.center.y-150, 2, 2);
+            onPan: function(args) {
+                self.ctx.fillRect(args[0].center.x, args[0].center.y-150, 2, 2);
             }
         }
     });
