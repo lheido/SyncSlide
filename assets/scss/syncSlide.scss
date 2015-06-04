@@ -102,6 +102,20 @@ body {
                 font-size: 48px;
                 width: 640px;
             }
+            
+            &.left {
+                width: auto;
+                float: left;
+                clear: both;
+                margin-left: 10%;
+            }
+
+            &.right {
+                width: auto;
+                clear: both;
+                float: right;
+                margin-right: 10%;
+            }
         }
         
         .slide-by {
@@ -182,4 +196,13 @@ body {
 
 .tap {
     transition: all 0.3s linear;
+}
+
+#test-canvas {
+    border: 4px solid $ubuntu-orange;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }

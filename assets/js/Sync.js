@@ -112,7 +112,8 @@ function SyncViewer() {
                 self.currentSlide -= 1;
             },
             onPan: function(args) {
-                self.ctx.fillRect(args[0].center.x, args[0].center.y-150, 2, 2);
+                var left = self.testCanvas.offsetLeft;
+                self.ctx.fillRect(args[0].center.x-left, args[0].center.y-200, 2, 2);
             }
         }
     });
