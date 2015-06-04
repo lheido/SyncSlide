@@ -21,52 +21,63 @@ function SyncClient(a) {
     this.emit("SendEvents", b);
 }
 
-function SyncViewer() {
-    var a = this;
-    SyncClient.call(this, {
+function SyncViewer(a) {
+    "undefined" == typeof a && (a = {});
+    var b = this, c = Hammer.extend({
         events: {
             onTap: function(a, b) {
                 var c = document.querySelectorAll(".tap")[b];
                 "0px 0px 42px grey" == c.style.boxShadow ? c.style.boxShadow = "0px 0px 42px transparent" : c.style.boxShadow = "0px 0px 42px grey";
             },
-            onSwipeLeft: function(b) {
-                a.currentSlide += 1, a.slides[a.currentSlide].style.transform = "translate3d(0%,0,0)";
+            onSwipeLeft: function(a) {
+                b.currentSlide += 1, b.slides[b.currentSlide].style.transform = "translate3d(0%,0,0)";
             },
-            onSwipeRight: function(b) {
-                a.slides[a.currentSlide].style.transform = "translate3d(100%,0,0)", a.currentSlide -= 1;
+            onSwipeRight: function(a) {
+                b.slides[b.currentSlide].style.transform = "translate3d(100%,0,0)", b.currentSlide -= 1;
             },
-            onPan: function(b) {
-                var c = a.testCanvas.offsetLeft;
-                a.ctx.fillRect(args[0].center.x - c, args[0].center.y - 200, 2, 2);
+            onPan: function(a) {
+                var c = b.testCanvas.offsetLeft;
+                b.ctx.fillRect(a.center.x - c, a.center.y - 200, 2, 2);
             }
         }
-    }), this.testCanvas = document.querySelector("#test-canvas"), this.ctx = this.testCanvas.getContext("2d"), 
-    this.content = document.querySelector(".content"), this.slides = document.querySelectorAll(".slide"), 
-    this.currentSlide = 0;
-    for (var b = 1; b < this.slides.length; b++) this.slides[b].style.transform = "translate3d(100%,0,0)";
+    }, a);
+    SyncClient.call(this, c), this.testCanvas = document.querySelector("#test-canvas"), 
+    this.ctx = this.testCanvas.getContext("2d"), this.content = document.querySelector(".content"), 
+    this.slides = document.querySelectorAll(".slide"), this.currentSlide = 0;
+    for (var d = 1; d < this.slides.length; d++) this.slides[d].style.transform = "translate3d(100%,0,0)";
 }
 
-function SyncController() {
-    if (SyncViewer.call(this), void 0 == Hammer) throw "SyncController depend on hammerjs lib. please install it before use it.";
-    var a = this;
-    this.hammerContent = new Hammer(this.content), this.hammerContent.on("swipeleft", function(b) {
-        a.currentSlideBeforeLast() && a.emit("onSwipeLeft", b);
-    }), this.hammerContent.on("swiperight", function(b) {
-        a.currentSlideAfterFirst() && a.emit("onSwipeRight", b);
-    });
-    var b = new Hammer(this.testCanvas);
-    b.get("pan").set({
-        direction: Hammer.DIRECTION_ALL
-    }), b.on("pan", function(b) {
-        a.emit("onPan", b);
-    });
-    var c = document.querySelectorAll(".tap");
-    Hammer.each(c, function(b, c, d) {
-        var e = new Hammer(b);
-        e.on("tap", function(b) {
-            a.emit("onTap", b, c);
+function SyncController(a) {
+    "undefined" == typeof a && (a = {});
+    var b = this, c = Hammer.extend({
+        hammer: {
+            ".content": {
+                swipeleft: function(a, c) {
+                    b.currentSlideBeforeLast() && b.emit("onSwipeLeft", a);
+                },
+                swiperight: function(a, c) {
+                    b.currentSlideAfterFirst() && b.emit("onSwipeRight", a);
+                }
+            },
+            ".tap": {
+                tap: function(a, c) {
+                    b.emit("onTap", a, c);
+                }
+            }
+        }
+    }, a);
+    if (SyncViewer.call(this, c), void 0 == Hammer) throw "SyncController depend on hammerjs lib. please install it before use it.";
+    for (var d in c.hammer) !function(a) {
+        var b = document.querySelectorAll(a);
+        Hammer.each(b, function(b, d, e) {
+            var f = new Hammer(b), g = c.hammer[a];
+            for (var h in g) !function(a, b) {
+                f.on(a, function(a) {
+                    b(a, d);
+                });
+            }(h, g[h]);
         });
-    });
+    }(d);
 }
 
 var PORT = 3e3, HOSTNAME = "localhost";

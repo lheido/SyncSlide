@@ -93,9 +93,10 @@ SyncClient.prototype.constructor = SyncClient;
  * Client viewer
  * Initialize the slides position.
  */
-function SyncViewer() {
+function SyncViewer(option) {
+    if (typeof(option)==='undefined') option = {};
     var self = this;
-    SyncClient.call(this, {
+    var opt = Hammer.extend({
         events: {
             onTap: function(evt, index) {
                 var elt = document.querySelectorAll('.tap')[index];
@@ -115,10 +116,11 @@ function SyncViewer() {
             },
             onPan: function(evt) {
                 var left = self.testCanvas.offsetLeft;
-                self.ctx.fillRect(args[0].center.x-left, args[0].center.y-200, 2, 2);
+                self.ctx.fillRect(evt.center.x-left, evt.center.y-200, 2, 2);
             }
         }
-    });
+    }, option);
+    SyncClient.call(this, opt);
     //test canvas
     this.testCanvas = document.querySelector('#test-canvas');
     this.ctx = this.testCanvas.getContext('2d');
@@ -147,35 +149,51 @@ SyncViewer.prototype.currentSlideAfterFirst = function() {
  * Client controller
  * Initialize the hammerjs slider events
  */
-function SyncController() {
-    SyncViewer.call(this);
+function SyncController(option) {
+    if (typeof(option)==='undefined') option = {};
+    var self = this;
+    var opt = Hammer.extend({
+        hammer: {
+            '.content': {
+                swipeleft: function(evt, index) {
+                    if (self.currentSlideBeforeLast()){
+                        self.emit('onSwipeLeft', evt);    
+                    }
+                },
+                swiperight: function(evt, index) {
+                    if (self.currentSlideAfterFirst()) {
+                        self.emit('onSwipeRight', evt);    
+                    }
+                }
+            },
+            '.tap': {
+                tap: function(evt, index) {
+                    self.emit('onTap', evt, index);
+                }
+            }
+        }
+    }, option);
+    SyncViewer.call(this, opt);
     if (Hammer == undefined) {
         throw "SyncController depend on hammerjs lib. please install it before use it.";
     }
-    var self = this;
-    this.hammerContent = new Hammer(this.content);
-    this.hammerContent.on('swipeleft', function(evt){
-        if (self.currentSlideBeforeLast()){
-            self.emit('onSwipeLeft', evt);    
-        }
-    });
-    this.hammerContent.on('swiperight', function(evt){
-        if (self.currentSlideAfterFirst()) {
-            self.emit('onSwipeRight', evt);    
-        }
-    });
-    var canvasEvent = new Hammer(this.testCanvas);
-    canvasEvent.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-    canvasEvent.on('pan', function(evt){
-        self.emit('onPan', evt) ;
-    });
-    var tapElts = document.querySelectorAll('.tap');
-    Hammer.each(tapElts, function(item, index, src){
-        var ham = new Hammer(item);
-        ham.on('tap', function(evt){
-            self.emit('onTap', evt, index);
-        });
-    });
+    for (var select in opt.hammer) {
+        //closure
+        (function(selector){
+            var elts = document.querySelectorAll(selector);
+            Hammer.each(elts, function(item, index, src){
+                var ham = new Hammer(item);
+                var events = opt.hammer[selector];//<-- need closure
+                for (var event in events) {
+                    (function(event, callback) {
+                        ham.on(event, function(e){
+                            callback(e, index);
+                        });
+                    })(event, events[event]);
+                }
+            });
+        })(select);
+    }
     
 }
 SyncController.prototype = Object.create(SyncViewer.prototype);
