@@ -57,7 +57,9 @@ SyncServer.prototype.eventClosure = function(event) {
     var self = this;
     this.socket.on(event, function(){
 //        self.broadcast(event, args);
-        self.io.emit(event, arguments);
+        var args = Array.prototype.slice.call(arguments);
+        args.splice(0, 0, event);
+        self.io.emit.apply(self.io, args);
     });
 }
 
@@ -95,23 +97,23 @@ function SyncViewer() {
     var self = this;
     SyncClient.call(this, {
         events: {
-            onTap: function(args) {
-                var elt = document.querySelectorAll('.tap')[args[1]];
+            onTap: function(evt, index) {
+                var elt = document.querySelectorAll('.tap')[index];
                 if (elt.style.boxShadow == "0px 0px 42px grey") {
                     elt.style.boxShadow = '0px 0px 42px transparent';
                 } else {
                     elt.style.boxShadow = '0px 0px 42px grey';
                 }
             },
-            onSwipeLeft: function(args) {
+            onSwipeLeft: function(evt) {
                 self.currentSlide += 1;
                 self.slides[self.currentSlide].style.transform = 'translate3d(0%,0,0)';
             },
-            onSwipeRight: function(args) {
+            onSwipeRight: function(evt) {
                 self.slides[self.currentSlide].style.transform = 'translate3d(100%,0,0)';
                 self.currentSlide -= 1;
             },
-            onPan: function(args) {
+            onPan: function(evt) {
                 var left = self.testCanvas.offsetLeft;
                 self.ctx.fillRect(args[0].center.x-left, args[0].center.y-200, 2, 2);
             }
