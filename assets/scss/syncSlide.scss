@@ -196,6 +196,11 @@ body {
 
 .tap {
     transition: all 0.3s linear;
+    box-shadow: 0 0 42px transparent;
+    
+    &.tapped {
+        box-shadow: 0 0 42px $cool-grey;
+    }
 }
 
 #test-canvas {

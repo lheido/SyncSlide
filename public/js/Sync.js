@@ -27,7 +27,7 @@ function SyncViewer(a) {
         events: {
             onTap: function(a, b) {
                 var c = document.querySelectorAll(".tap")[b];
-                "0px 0px 42px grey" == c.style.boxShadow ? c.style.boxShadow = "0px 0px 42px transparent" : c.style.boxShadow = "0px 0px 42px grey";
+                c.classList.toggle("tapped");
             },
             onSwipeLeft: function(a) {
                 b.currentSlide += 1, b.slides[b.currentSlide].style.transform = "translate3d(0%,0,0)";
@@ -35,16 +35,17 @@ function SyncViewer(a) {
             onSwipeRight: function(a) {
                 b.slides[b.currentSlide].style.transform = "translate3d(100%,0,0)", b.currentSlide -= 1;
             },
-            onPan: function(a) {
-                var c = b.testCanvas.offsetLeft;
-                b.ctx.fillRect(a.center.x - c, a.center.y - 200, 2, 2);
+            getCurrentSlide: function(a) {
+                b.currentSlideAfterFirst() && b.emit("sendCurrentSlide", b.currentSlide);
+            },
+            sendCurrentSlide: function(a) {
+                b.currentSlide = a, b.slides[a].style.transform = "translate3d(0%,0,0)";
             }
         }
     }, a);
-    SyncClient.call(this, c), this.testCanvas = document.querySelector("#test-canvas"), 
-    this.ctx = this.testCanvas.getContext("2d"), this.content = document.querySelector(".content"), 
-    this.slides = document.querySelectorAll(".slide"), this.currentSlide = 0;
+    SyncClient.call(this, c), this.slides = document.querySelectorAll(".slide"), this.currentSlide = 0;
     for (var d = 1; d < this.slides.length; d++) this.slides[d].style.transform = "translate3d(100%,0,0)";
+    this.emit("getCurrentSlide");
 }
 
 function SyncController(a) {
