@@ -117,7 +117,9 @@ function SyncViewer(option) {
             },
             sendCurrentSlide: function(index) {
                 self.currentSlide = index;
-                self.slides[index].style.transform = 'translate3d(0%,0,0)';
+                for (var i = 0; i <= index; i++) {
+                    self.slides[i].style.transform = 'translate3d(0%,0,0)';
+                }
             }
         }
     }, option);

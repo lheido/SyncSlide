@@ -39,7 +39,8 @@ function SyncViewer(a) {
                 b.currentSlideAfterFirst() && b.emit("sendCurrentSlide", b.currentSlide);
             },
             sendCurrentSlide: function(a) {
-                b.currentSlide = a, b.slides[a].style.transform = "translate3d(0%,0,0)";
+                b.currentSlide = a;
+                for (var c = 0; a >= c; c++) b.slides[c].style.transform = "translate3d(0%,0,0)";
             }
         }
     }, a);
