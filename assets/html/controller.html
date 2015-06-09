@@ -114,7 +114,21 @@
         </div>
     </div>
     <script>
-       var controller = new SyncController();
+        var controller = new SyncController({
+            events: {
+                onHeaderTap: function(evt, index) {
+                    var elt = document.querySelectorAll('.slide-header > h1')[index];
+                    elt.style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+                }
+            },
+            hammer: {
+                ".slide-header": {
+                    tap: function(evt, index) {
+                        controller.emit('onHeaderTap', evt, index);
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>

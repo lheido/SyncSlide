@@ -114,7 +114,14 @@
         </div>
     </div>
     <script>
-        var viewer = new SyncViewer();
+        var viewer = new SyncViewer({
+            events: {
+                onHeaderTap: function(evt, index) {
+                    var elt = document.querySelectorAll('.slide-header > h1')[index];
+                    elt.style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+                }
+            }
+        });
     </script>
 </body>
 </html>

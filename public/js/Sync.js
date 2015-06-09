@@ -22,57 +22,62 @@ function SyncClient(a) {
 }
 
 function SyncViewer(a) {
-    "undefined" == typeof a && (a = {});
+    "undefined" == typeof a && (a = {
+        events: {}
+    });
     var b = this, c = Hammer.extend({
-        events: {
-            onTap: function(a, b) {
-                var c = document.querySelectorAll(".tap")[b];
-                c.classList.toggle("tapped");
-            },
-            onSwipeLeft: function(a) {
-                b.currentSlide += 1, b.slides[b.currentSlide].style.transform = "translate3d(0%,0,0)";
-            },
-            onSwipeRight: function(a) {
-                b.slides[b.currentSlide].style.transform = "translate3d(100%,0,0)", b.currentSlide -= 1;
-            },
-            getCurrentSlide: function(a) {
-                b.currentSlideAfterFirst() && b.emit("sendCurrentSlide", b.currentSlide);
-            },
-            sendCurrentSlide: function(a) {
-                b.currentSlide = a;
-                for (var c = 0; a >= c; c++) b.slides[c].style.transform = "translate3d(0%,0,0)";
-            }
+        onTap: function(a, b) {
+            var c = document.querySelectorAll(".tap")[b];
+            c.classList.toggle("tapped");
+        },
+        onSwipeLeft: function(a) {
+            b.currentSlide += 1, b.slides[b.currentSlide].style.transform = "translate3d(0%,0,0)";
+        },
+        onSwipeRight: function(a) {
+            b.slides[b.currentSlide].style.transform = "translate3d(100%,0,0)", b.currentSlide -= 1;
+        },
+        getCurrentSlide: function(a) {
+            b.currentSlideAfterFirst() && b.emit("sendCurrentSlide", b.currentSlide);
+        },
+        sendCurrentSlide: function(a) {
+            b.currentSlide = a;
+            for (var c = 0; a >= c; c++) b.slides[c].style.transform = "translate3d(0%,0,0)";
         }
-    }, a);
-    SyncClient.call(this, c), this.slides = document.querySelectorAll(".slide"), this.currentSlide = 0;
+    }, a.events);
+    SyncClient.call(this, {
+        events: c
+    }), this.slides = document.querySelectorAll(".slide"), this.currentSlide = 0;
     for (var d = 1; d < this.slides.length; d++) this.slides[d].style.transform = "translate3d(100%,0,0)";
     this.emit("getCurrentSlide");
 }
 
 function SyncController(a) {
     "undefined" == typeof a && (a = {});
-    var b = this, c = Hammer.extend({
-        hammer: {
-            ".content": {
-                swipeleft: function(a, c) {
-                    b.currentSlideBeforeLast() && b.emit("onSwipeLeft", a);
-                },
-                swiperight: function(a, c) {
-                    b.currentSlideAfterFirst() && b.emit("onSwipeRight", a);
-                }
+    var b = this;
+    "undefined" == typeof a.events && (a.events = {}), "undefined" == typeof a.hammer && (a.hammer = {});
+    var c = Hammer.extend({
+        ".content": {
+            swipeleft: function(a, c) {
+                b.currentSlideBeforeLast() && b.emit("onSwipeLeft", a);
             },
-            ".tap": {
-                tap: function(a, c) {
-                    b.emit("onTap", a, c);
-                }
+            swiperight: function(a, c) {
+                b.currentSlideAfterFirst() && b.emit("onSwipeRight", a);
+            }
+        },
+        ".tap": {
+            tap: function(a, c) {
+                b.emit("onTap", a, c);
             }
         }
-    }, a);
-    if (SyncViewer.call(this, c), void 0 == Hammer) throw "SyncController depend on hammerjs lib. please install it before use it.";
-    for (var d in c.hammer) !function(a) {
+    }, a.hammer);
+    if (SyncViewer.call(this, {
+        events: a.events,
+        hammer: c
+    }), void 0 == Hammer) throw "SyncController depend on hammerjs lib. please install it before use it.";
+    for (var d in c) !function(a) {
         var b = document.querySelectorAll(a);
         Hammer.each(b, function(b, d, e) {
-            var f = new Hammer(b), g = c.hammer[a];
+            var f = new Hammer(b), g = c[a];
             for (var h in g) !function(a, b) {
                 f.on(a, function(a) {
                     b(a, d);

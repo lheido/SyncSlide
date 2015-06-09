@@ -94,36 +94,35 @@ SyncClient.prototype.constructor = SyncClient;
  * Initialize the slides position.
  */
 function SyncViewer(option) {
-    if (typeof(option)==='undefined') option = {};
+    if (typeof(option)==='undefined') option = { events: {}};
     var self = this;
-    var opt = Hammer.extend({
-        events: {
-            onTap: function(evt, index) {
-                var elt = document.querySelectorAll('.tap')[index];
-                elt.classList.toggle('tapped');
-            },
-            onSwipeLeft: function(evt) {
-                self.currentSlide += 1;
-                self.slides[self.currentSlide].style.transform = 'translate3d(0%,0,0)';
-            },
-            onSwipeRight: function(evt) {
-                self.slides[self.currentSlide].style.transform = 'translate3d(100%,0,0)';
-                self.currentSlide -= 1;
-            },
-            getCurrentSlide: function(evt) {
-                if (self.currentSlideAfterFirst()) {
-                    self.emit('sendCurrentSlide', self.currentSlide);
-                }
-            },
-            sendCurrentSlide: function(index) {
-                self.currentSlide = index;
-                for (var i = 0; i <= index; i++) {
-                    self.slides[i].style.transform = 'translate3d(0%,0,0)';
-                }
+    //Hammer.extend is not a deep merge.
+    var eventsMerged = Hammer.extend({
+        onTap: function(evt, index) {
+            var elt = document.querySelectorAll('.tap')[index];
+            elt.classList.toggle('tapped');
+        },
+        onSwipeLeft: function(evt) {
+            self.currentSlide += 1;
+            self.slides[self.currentSlide].style.transform = 'translate3d(0%,0,0)';
+        },
+        onSwipeRight: function(evt) {
+            self.slides[self.currentSlide].style.transform = 'translate3d(100%,0,0)';
+            self.currentSlide -= 1;
+        },
+        getCurrentSlide: function(evt) {
+            if (self.currentSlideAfterFirst()) {
+                self.emit('sendCurrentSlide', self.currentSlide);
+            }
+        },
+        sendCurrentSlide: function(index) {
+            self.currentSlide = index;
+            for (var i = 0; i <= index; i++) {
+                self.slides[i].style.transform = 'translate3d(0%,0,0)';
             }
         }
-    }, option);
-    SyncClient.call(this, opt);
+    }, option.events);
+    SyncClient.call(this, {events: eventsMerged});
     this.slides = document.querySelectorAll('.slide');
     this.currentSlide = 0;
     //init slides position
@@ -151,8 +150,9 @@ SyncViewer.prototype.currentSlideAfterFirst = function() {
 function SyncController(option) {
     if (typeof(option)==='undefined') option = {};
     var self = this;
-    var opt = Hammer.extend({
-        hammer: {
+    if (typeof(option.events)==='undefined') option.events = {};
+    if (typeof(option.hammer)==='undefined') option.hammer = {};
+    var hammerMerged = Hammer.extend({
             '.content': {
                 swipeleft: function(evt, index) {
                     if (self.currentSlideBeforeLast()){
@@ -170,19 +170,18 @@ function SyncController(option) {
                     self.emit('onTap', evt, index);
                 }
             }
-        }
-    }, option);
-    SyncViewer.call(this, opt);
+        }, option.hammer);
+    SyncViewer.call(this, {events: option.events, hammer: hammerMerged});
     if (Hammer == undefined) {
         throw "SyncController depend on hammerjs lib. please install it before use it.";
     }
-    for (var select in opt.hammer) {
+    for (var select in hammerMerged) {
         //closure
         (function(selector){
             var elts = document.querySelectorAll(selector);
             Hammer.each(elts, function(item, index, src){
                 var ham = new Hammer(item);
-                var events = opt.hammer[selector];//<-- need closure
+                var events = hammerMerged[selector];//<-- need closure
                 for (var event in events) {
                     (function(event, callback) {
                         ham.on(event, function(e){
