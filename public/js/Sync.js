@@ -25,7 +25,7 @@ function SyncViewer(a) {
     "undefined" == typeof a && (a = {
         events: {}
     });
-    var b = this, c = Hammer.extend({
+    var b = this, c = Sync.mergeOptions({
         onTap: function(a, b) {
             var c = document.querySelectorAll(".tap")[b];
             c.classList.toggle("tapped");
@@ -55,7 +55,7 @@ function SyncController(a) {
     "undefined" == typeof a && (a = {});
     var b = this;
     "undefined" == typeof a.events && (a.events = {}), "undefined" == typeof a.hammer && (a.hammer = {});
-    var c = Hammer.extend({
+    var c = Sync.mergeOptions({
         ".content": {
             swipeleft: function(a, c) {
                 b.currentSlideBeforeLast() && b.emit("onSwipeLeft", a);
@@ -97,6 +97,10 @@ Sync.prototype.emit = function() {
     } catch (a) {
         console.log(a);
     }
+}, Sync.mergeOptions = function(a, b) {
+    var c = {};
+    for (var d in a) "undefined" == typeof b[d] ? c[d] = a[d] : "object" == typeof a[d] && "object" == typeof b[d] ? c[d] = Sync.mergeOptions(a[d], b[d]) : c[d] = b[d];
+    return c;
 }, SyncServer.prototype = Object.create(Sync.prototype), SyncServer.prototype.constructor = SyncServer, 
 SyncServer.prototype.eventClosure = function(a) {
     var b = this;

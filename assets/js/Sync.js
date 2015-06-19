@@ -34,6 +34,25 @@ Sync.prototype.broadcast = function() {
 }
 
 /*
+ * custom merge object function to merge options
+ */
+Sync.mergeOptions = function(obj1, obj2) {
+    var target = {};
+    for (var attr in obj1) {
+        if (typeof obj2[attr] == 'undefined') {
+            target[attr] = obj1[attr];
+        } else {
+            if (typeof obj1[attr] == 'object' && typeof obj2[attr] == 'object') {
+                target[attr] = Sync.mergeOptions(obj1[attr], obj2[attr]);
+            } else {
+                target[attr] = obj2[attr];
+            }
+        }
+    }
+    return target;
+}
+
+/*
  * Provide simple and generic server listener.
  */
 function SyncServer(socket, io) {
@@ -96,8 +115,7 @@ SyncClient.prototype.constructor = SyncClient;
 function SyncViewer(option) {
     if (typeof(option)==='undefined') option = { events: {}};
     var self = this;
-    //Hammer.extend is not a deep merge.
-    var eventsMerged = Hammer.extend({
+    var eventsMerged = Sync.mergeOptions({
         onTap: function(evt, index) {
             var elt = document.querySelectorAll('.tap')[index];
             elt.classList.toggle('tapped');
@@ -152,7 +170,7 @@ function SyncController(option) {
     var self = this;
     if (typeof(option.events)==='undefined') option.events = {};
     if (typeof(option.hammer)==='undefined') option.hammer = {};
-    var hammerMerged = Hammer.extend({
+    var hammerMerged = Sync.mergeOptions({
             '.content': {
                 swipeleft: function(evt, index) {
                     if (self.currentSlideBeforeLast()){
