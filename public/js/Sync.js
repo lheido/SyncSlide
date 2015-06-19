@@ -70,7 +70,7 @@ function SyncController(a) {
             }
         }
     }, a.hammer);
-    if (SyncViewer.call(this, {
+    if (console.log(c, a.hammer), SyncViewer.call(this, {
         events: a.events,
         hammer: c
     }), void 0 == Hammer) throw "SyncController depend on hammerjs lib. please install it before use it.";
@@ -100,6 +100,7 @@ Sync.prototype.emit = function() {
 }, Sync.mergeOptions = function(a, b) {
     var c = {};
     for (var d in a) "undefined" == typeof b[d] ? c[d] = a[d] : "object" == typeof a[d] && "object" == typeof b[d] ? c[d] = Sync.mergeOptions(a[d], b[d]) : c[d] = b[d];
+    for (var d in b) "undefined" == typeof a[d] && (c[d] = b[d]);
     return c;
 }, SyncServer.prototype = Object.create(Sync.prototype), SyncServer.prototype.constructor = SyncServer, 
 SyncServer.prototype.eventClosure = function(a) {

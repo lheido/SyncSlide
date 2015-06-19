@@ -49,6 +49,11 @@ Sync.mergeOptions = function(obj1, obj2) {
             }
         }
     }
+    for (var attr in obj2) {
+        if (typeof obj1[attr] == 'undefined') {
+            target[attr] = obj2[attr];
+        }
+    }
     return target;
 }
 
@@ -189,6 +194,7 @@ function SyncController(option) {
                 }
             }
         }, option.hammer);
+    console.log(hammerMerged, option.hammer);
     SyncViewer.call(this, {events: option.events, hammer: hammerMerged});
     if (Hammer == undefined) {
         throw "SyncController depend on hammerjs lib. please install it before use it.";
